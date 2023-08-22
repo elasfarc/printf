@@ -42,7 +42,7 @@ int _printf(const char *format, ...)
 					break;
 				case 's':
 					next_str = va_arg(ap, char *);
-					counter = handle_string(next_str);
+					counter += handle_string(next_str);
 					i++;
 					break;
 			}
