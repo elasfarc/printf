@@ -5,6 +5,8 @@
 
 #define IS_SPECIFIER(c) ((c) == '%' || (c) == 'c' || (c) == 's')
 
+int handle_string(char *s);
+
 /**
  * _printf - produces output according to a format
  * @format: string contaionig the format.
@@ -17,7 +19,6 @@ int _printf(const char *format, ...)
 	va_list ap;
 	unsigned int i, len, counter = 0;
 	char *next_str;
-	size_t next_str_size;
 
 	if (format == NULL)
 		return (-1);
@@ -41,8 +42,7 @@ int _printf(const char *format, ...)
 					break;
 				case 's':
 					next_str = va_arg(ap, char *);
-					next_str_size = sizeof(char) * _strlen(next_str);
-					counter += write(1, next_str, next_str_size);
+					counter = handle_string(next_str);
 					i++;
 					break;
 			}
@@ -55,3 +55,22 @@ int _printf(const char *format, ...)
 	return (counter);
 }
 
+/**
+ * handle_string - handles the %s specifier
+ *	write to stdout the string
+ *	if the string is NULL then it's converted to (null)
+ * @s: string to be handled
+ *
+ * Return: number of characters in s.
+ */
+int handle_string(char *s)
+{
+	unsigned int counter;
+
+	counter = write(
+			1,
+			(s == NULL ? "(null)" : s),
+			sizeof(char) * (s == NULL ? 6 : _strlen(s))
+			);
+	return (counter);
+}
