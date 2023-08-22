@@ -19,9 +19,11 @@ int _printf(const char *format, ...)
 	char *next_str;
 	size_t next_str_size;
 
+	if (format == NULL)
+		return (-1);
+
 	len = _strlen(format);
 	va_start(ap, format);
-
 
 	for (i = 0; i < len; i++)
 	{
@@ -48,8 +50,6 @@ int _printf(const char *format, ...)
 		else
 			counter += _putchar(format[i]);
 	}
-
-
 
 	va_end(ap);
 	return (counter);
