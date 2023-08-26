@@ -7,6 +7,8 @@
 #define IS_VALID_SPECIFIER(c)                                          \
 	((c) == '%' || (c) == 'c' || (c) == 's' || (c) == 'd' || (c) == 'i')
 
+#define IS_NEGATIVE(n) ((n) < 0)
+
 void set_specifier(const char *format, state_t *state);
 void handle_specifier(const char *format, va_list args, state_t *state);
 int handle_string(char *s);
@@ -138,13 +140,9 @@ int handle_numbers(double n, short tag)
 {
 	int counter = 0, len = 0, temp;
 	char *digits;
-	short i;
+	short i, rmder, is_negative;
 
-	if (n < 0)
-	{
-		counter += _putchar('-');
-		n *= -1;
-	}
+	is_negative = IS_NEGATIVE(n);
 
 	if (tag == 1) /* int */
 	{
@@ -152,16 +150,27 @@ int handle_numbers(double n, short tag)
 		 * determine the length of the number digits
 		 * to allocate an array containing them
 		 */
-		for (temp = (int)n; temp > 0; temp /= 10)
-			len++;
-		digits = malloc(sizeof(char) * (len + 1)); /* +1 for the Null char */
+		if (n == 0)
+			len = 1;
+		else
+			for (temp = (int)n; temp != 0; temp /= 10)
+				len++;
+		len = len + is_negative + 1; /* +1 for the null char */
+
+		digits = malloc(sizeof(char) * len);
 
 		if (digits)
 		{
-			for (i = len - 1, temp = (int)n; temp > 0; temp /= 10)
+			digits[len - 1] = '\0';
+			if (is_negative)
+				digits[0] = '-';
+
+			for (i = len - 2, temp = (int)n;
+					(is_negative ? i > 0 : i >= 0); i--)
 			{
-				digits[i] = (temp % 10) + '0';
-				i--;
+				rmder = temp % 10;
+				digits[i] = is_negative ? ('0' - rmder) : (rmder + '0');
+				temp /= 10;
 			}
 		} else
 			digits = NULL;

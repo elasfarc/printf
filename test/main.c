@@ -14,7 +14,11 @@ int main(void)
 	addr = (void *)0x7ffe637541f0;*/
        	_printf("Length:[%d, %i]\n", len, len);
 	printf("Length:[%d, %i]\n", len2, len2);
-	printf("%d", 0);
+	printf("\n");
+	_printf("%d", 0);
+	printf("\n");
+	_printf("%d", INT_MIN);
+	_printf("\n");
 	return (0);
 }
 
