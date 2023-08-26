@@ -2,13 +2,15 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <unistd.h>
+#include <stdlib.h>
 
-#define IS_VALID_SPECIFIER(c) ((c) == '%' || (c) == 'c' || (c) == 's')
-
+#define IS_VALID_SPECIFIER(c)                                          \
+	((c) == '%' || (c) == 'c' || (c) == 's' || (c) == 'd' || (c) == 'i')
 
 void set_specifier(const char *format, state_t *state);
 void handle_specifier(const char *format, va_list args, state_t *state);
 int handle_string(char *s);
+int handle_numbers(double n, short tag);
 
 /**
  * _printf - produces output according to a format
@@ -100,7 +102,11 @@ void handle_specifier(const char *format, va_list args, state_t *state)
 			/* handle spaces between % and specifier */
 			if (state->has_space)
 				state->counter += _putchar(' ');
-			state->counter += _putchar(specifier);
+			if (specifier == 'd' || specifier == 'i')
+			{
+				state->counter += handle_numbers(va_arg(args, int), 1);
+			} else
+				state->counter += _putchar(specifier);
 		}
 	}
 }
@@ -119,6 +125,50 @@ int handle_string(char *s)
 
 	counter = write(1, (s == NULL ? "(null)" : s),
 			sizeof(char) * (s == NULL ? 6 : _strlen(s)));
+	return (counter);
+}
+/**
+ * handle_numbers - handle the %d, %i specifiers
+ * @n: number to be printed.
+ * @tag: tag of the number 1 for int, 2 for float (not yet implemented)
+ *
+ * Return: number of digits in @n
+ */
+int handle_numbers(double n, short tag)
+{
+	int counter = 0, len = 0, temp;
+	char *digits;
+	short i;
+
+	if (n < 0)
+	{
+		counter += _putchar('-');
+		n *= -1;
+	}
+
+	if (tag == 1) /* int */
+	{
+		/*
+		 * determine the length of the number digits
+		 * to allocate an array containing them
+		 */
+		for (temp = (int)n; temp > 0; temp /= 10)
+			len++;
+		digits = malloc(sizeof(char) * (len + 1)); /* +1 for the Null char */
+
+		if (digits)
+		{
+			for (i = len - 1, temp = (int)n; temp > 0; temp /= 10)
+			{
+				digits[i] = (temp % 10) + '0';
+				i--;
+			}
+		} else
+			digits = NULL;
+	}
+
+	counter += handle_string(digits);
+	free(digits);
 	return (counter);
 }
 
