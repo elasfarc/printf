@@ -5,7 +5,8 @@
 #include <stdlib.h>
 
 #define IS_VALID_SPECIFIER(c)                                          \
-	((c) == '%' || (c) == 'c' || (c) == 's' || (c) == 'd' || (c) == 'i')
+	((c) == '%' || (c) == 'c' || (c) == 's' || (c) == 'd' ||       \
+	 (c) == 'i' || (c) == 'b')
 
 
 void set_specifier(const char *format, state_t *state);
@@ -103,9 +104,10 @@ void handle_specifier(const char *format, va_list args, state_t *state)
 			if (state->has_space)
 				state->counter += _putchar(' ');
 			if (specifier == 'd' || specifier == 'i')
-			{
 				state->counter += handle_numbers(va_arg(args, int), 1);
-			} else
+			else if (specifier == 'b')
+				state->counter += handle_numbers(va_arg(args, int), 'b');
+			else
 				state->counter += _putchar(specifier);
 		}
 	}

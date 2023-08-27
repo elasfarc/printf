@@ -57,19 +57,21 @@ int get_digits_len(double num, short tag, short is_negative)
 
 	return (len);
 }
+
 /**
- * itod - convert an integer number to it's decimal ASCII
- * @s: pointer to the string to save the conversion at.
+ * itoASCII - convert an integer to it's ASCII representaion.
+ * @s: pointer to the string to save the convertion at.
  * @len: length of @s.
- * @num: The number to be converted.
- * @is_negative: (flag) wheter @n is negative or not.
+ * @num: the number to be converted.
+ * @is_negative: a flag to represent wheter or not @num is negative.
  *
- * Return: the string @s filled with the decimal ASCII.
+ * Return: a pointer to string (@s)
  */
-char *itod(char *s, int len, int num, short is_negative)
+char *itoASCII(char *s, int len, int num, short is_negative)
 {
 	short i, rmder;
 
+	s[len - 1] = '\0';
 	if (is_negative)
 		s[0] = '-';
 	for (i = len - 2; (is_negative ? i > 0 : i >= 0); i--)
@@ -79,67 +81,6 @@ char *itod(char *s, int len, int num, short is_negative)
 		num /= 10;
 	}
 	return (s);
-}
-
-/**
- * itob - convert an integer number to it's Binary ASCII
- * @s: pointer to the string to save the conversion at.
- * @len: length of @s.
- * @num: The number to be converted.
- * @is_negative: (flag) wheter @n is negative or not.
- *
- * Return: the string @s filled with the binary ASCII.
- */
-
-char *itob(char *s, int len, int num, short is_negative)
-{
-	short i, rmder, carry;
-
-	if (is_negative)
-		s[0] = '0';
-
-	for (i = len - 2; i >= 0; i--)
-	{
-		rmder = num % 2;
-		s[i] = (is_negative ? rmder ^ 1 : rmder) + '0';
-		num /= 2;
-	}
-	if (is_negative)
-	{
-		/* add 1 to s */
-		carry = 1;
-		for (i = len - 2; i >= 0; i--)
-		{
-			if (s[i] == '1' && carry)
-				s[i] = '0';
-			else if (carry)
-			{
-				s[i] = '1';
-				carry = 0;
-			}
-			if (carry == 0)
-				break;
-		}
-	}
-	return (s[0] == '0' ? s + 1 : s);
-}
-
-/**
- * itoASCII - convert an integer to it's ASCII representaion.
- *		binary or dicimal
- * @s: pointer to the string to save the convertion at.
- * @len: length of @s.
- * @num: the number to be converted.
- * @is_negative: a flag to represent wheter or not @num is negative.
- * @tag: kind of the transformation ('b', 'i', 'd').
- *
- * Return: a pointer to string (@s)
- */
-char *itoASCII(char *s, int len, int num, short is_negative, char tag)
-{
-	s[len - 1] = '\0';
-	return (tag == 'b' ? itob(s, len, num, is_negative)
-			: itod(s, len, num, is_negative));
 }
 
 /**
@@ -160,7 +101,7 @@ int handle_numbers(double n, char tag)
 
 	len = get_digits_len(n, tag, is_negative);
 	digits = malloc(sizeof(char) * len);
-	digits = !digits ? NULL : itoASCII(digits, len, n, is_negative, tag);
+	digits = !digits ? NULL : itoASCII(digits, len, n, is_negative);
 
 	counter += handle_string(digits);
 	free(digits);

@@ -19,6 +19,7 @@ int main(void)
 	printf("\n");
 	_printf("%d", INT_MIN);
 	_printf("\n");
+	_printf("%b\n", 98);
 	return (0);
 }
 
