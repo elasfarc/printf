@@ -7,12 +7,10 @@
 #define IS_VALID_SPECIFIER(c)                                          \
 	((c) == '%' || (c) == 'c' || (c) == 's' || (c) == 'd' || (c) == 'i')
 
-#define IS_NEGATIVE(n) ((n) < 0)
 
 void set_specifier(const char *format, state_t *state);
 void handle_specifier(const char *format, va_list args, state_t *state);
 int handle_string(char *s);
-int handle_numbers(double n, short tag);
 
 /**
  * _printf - produces output according to a format
@@ -127,57 +125,6 @@ int handle_string(char *s)
 
 	counter = write(1, (s == NULL ? "(null)" : s),
 			sizeof(char) * (s == NULL ? 6 : _strlen(s)));
-	return (counter);
-}
-/**
- * handle_numbers - handle the %d, %i specifiers
- * @n: number to be printed.
- * @tag: tag of the number 1 for int, 2 for float (not yet implemented)
- *
- * Return: number of digits in @n
- */
-int handle_numbers(double n, short tag)
-{
-	int counter = 0, len = 0, temp;
-	char *digits;
-	short i, rmder, is_negative;
-
-	is_negative = IS_NEGATIVE(n);
-
-	if (tag == 1) /* int */
-	{
-		/*
-		 * determine the length of the number digits
-		 * to allocate an array containing them
-		 */
-		if (n == 0)
-			len = 1;
-		else
-			for (temp = (int)n; temp != 0; temp /= 10)
-				len++;
-		len = len + is_negative + 1; /* +1 for the null char */
-
-		digits = malloc(sizeof(char) * len);
-
-		if (digits)
-		{
-			digits[len - 1] = '\0';
-			if (is_negative)
-				digits[0] = '-';
-
-			for (i = len - 2, temp = (int)n;
-					(is_negative ? i > 0 : i >= 0); i--)
-			{
-				rmder = temp % 10;
-				digits[i] = is_negative ? ('0' - rmder) : (rmder + '0');
-				temp /= 10;
-			}
-		} else
-			digits = NULL;
-	}
-
-	counter += handle_string(digits);
-	free(digits);
 	return (counter);
 }
 

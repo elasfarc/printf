@@ -15,7 +15,7 @@ int main(void)
        	_printf("Length:[%d, %i]\n", len, len);
 	printf("Length:[%d, %i]\n", len2, len2);
 	printf("\n");
-	_printf("%d", 0);
+	_printf("%d", 39);
 	printf("\n");
 	_printf("%d", INT_MIN);
 	_printf("\n");

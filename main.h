@@ -22,5 +22,7 @@ typedef struct State
 unsigned int _strlen(const char *);
 int _putchar(char);
 int _printf(const char *format, ...);
+int handle_numbers(double n, char tag);
+int handle_string(char *s);
 
 #endif
