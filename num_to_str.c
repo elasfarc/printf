@@ -121,7 +121,7 @@ char *itob(char *s, int len, int num, short is_negative)
 				break;
 		}
 	}
-	return (s[0] == '0' ? s + 1 : s);
+	return (is_negative && s[0] == '0' ? s + 1 : s);
 }
 
 /**

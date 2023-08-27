@@ -20,6 +20,14 @@ int main(void)
 	_printf("%d", INT_MIN);
 	_printf("\n");
 	_printf("%b\n", 98);
+	_printf("%b", 1024);
+	_printf("\n");
+	_printf("%b", -1024);
+	_printf("\n");
+	_printf("%b", 0);
+	_printf("\n");
+	_printf("%b", UINT_MAX);
+	_printf("\n");
 	return (0);
 }
 
