@@ -43,14 +43,14 @@ int (*operation(char op))(int, int)
  */
 int get_digits_len(double num, short tag, short is_negative)
 {
-	int len = 0, temp;
+	int len = 0;
 	short divisor = tag == 'b' ? 2 : 10;
 
 	if (num == 0)
 		len = 1;
 	else
-		for (temp = (int)num; temp != 0;
-				temp = operation('/')(temp, divisor))
+		for (; num != 0;
+				num = operation('/')(num, divisor))
 			len++;
 
 	len = len + is_negative + 1; /* +1 for the null char */
@@ -85,13 +85,13 @@ char *itod(char *s, int len, int num, short is_negative)
  * itob - convert an integer number to it's Binary ASCII
  * @s: pointer to the string to save the conversion at.
  * @len: length of @s.
- * @num: The number to be converted.
+ * @num: The number to be converted. (implicity converted to unsigned)
  * @is_negative: (flag) wheter @n is negative or not.
  *
  * Return: the string @s filled with the binary ASCII.
  */
 
-char *itob(char *s, int len, int num, short is_negative)
+char *itob(char *s, int len, unsigned int num, short is_negative)
 {
 	short i, rmder, carry;
 
@@ -135,7 +135,7 @@ char *itob(char *s, int len, int num, short is_negative)
  *
  * Return: a pointer to string (@s)
  */
-char *itoASCII(char *s, int len, int num, short is_negative, char tag)
+char *itoASCII(char *s, int len, double num, short is_negative, char tag)
 {
 	s[len - 1] = '\0';
 	return (tag == 'b' ? itob(s, len, num, is_negative)
