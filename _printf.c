@@ -105,8 +105,8 @@ void handle_specifier(const char *format, va_list args, state_t *state)
 				state->counter += _putchar(' ');
 			if (specifier == 'd' || specifier == 'i')
 				state->counter += handle_numbers(va_arg(args, int), 1);
-			else if (specifier == 'b')
-				state->counter += handle_numbers(va_arg(args, unsigned int), 'b');
+			else if (specifier == 'b' || specifier == 'u')
+				state->counter += handle_numbers(va_arg(args, unsigned int), specifier);
 			else
 				state->counter += _putchar(specifier);
 		}

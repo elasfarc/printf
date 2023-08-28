@@ -66,7 +66,7 @@ int get_digits_len(double num, short tag, short is_negative)
  *
  * Return: the string @s filled with the decimal ASCII.
  */
-char *itod(char *s, int len, int num, short is_negative)
+char *itod(char *s, int len, double num, short is_negative, char tag)
 {
 	short i, rmder;
 
@@ -74,7 +74,10 @@ char *itod(char *s, int len, int num, short is_negative)
 		s[0] = '-';
 	for (i = len - 2; (is_negative ? i > 0 : i >= 0); i--)
 	{
-		rmder = num % 10;
+		if (tag == 'u')
+			rmder = (unsigned int)num % 10;
+		else rmder = (int)num % 10;
+
 		s[i] = is_negative ? ('0' - rmder) : (rmder + '0');
 		num /= 10;
 	}
@@ -139,7 +142,7 @@ char *itoASCII(char *s, int len, double num, short is_negative, char tag)
 {
 	s[len - 1] = '\0';
 	return (tag == 'b' ? itob(s, len, num, is_negative)
-			: itod(s, len, num, is_negative));
+			: itod(s, len, num, is_negative, tag));
 }
 
 /**
