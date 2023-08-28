@@ -44,7 +44,7 @@ int (*operation(char op))(int, int)
 int get_digits_len(double num, short tag, short is_negative)
 {
 	int len = 0;
-	short divisor = tag == 'b' ? 2 : 10;
+	short divisor = tag == 'b' ? 2 : tag == 'o' ? 8 : 10;
 
 	if (num == 0)
 		len = 1;
@@ -63,6 +63,7 @@ int get_digits_len(double num, short tag, short is_negative)
  * @len: length of @s.
  * @num: The number to be converted.
  * @is_negative: (flag) wheter @n is negative or not.
+ * @tag: the format specifier (currently 'd','i' and 'u')
  *
  * Return: the string @s filled with the decimal ASCII.
  */
@@ -76,7 +77,8 @@ char *itod(char *s, int len, double num, short is_negative, char tag)
 	{
 		if (tag == 'u')
 			rmder = (unsigned int)num % 10;
-		else rmder = (int)num % 10;
+		else
+			rmder = (int)num % 10;
 
 		s[i] = is_negative ? ('0' - rmder) : (rmder + '0');
 		num /= 10;
@@ -127,6 +129,28 @@ char *itob(char *s, int len, unsigned int num, short is_negative)
 	return (is_negative && s[0] == '0' ? s + 1 : s);
 }
 
+
+/**
+ * itooc - convert an integer number to it's Octal ASCII
+ * @s: pointer to the string to save the conversion at.
+ * @len: length of @s.
+ * @num: The number to be converted. (implicity converted to unsigned)
+ *
+ * Return: the string @s filled with the binary ASCII.
+ */
+char *itooc(char *s, int len, unsigned int num)
+{
+	short i;
+
+	for (i = len - 2; i >= 0; i--)
+	{
+		s[i] = (num % 8) + '0';
+		num /= 8;
+	}
+
+	return (s);
+}
+
 /**
  * itoASCII - convert an integer to it's ASCII representaion.
  *		binary or dicimal
@@ -141,7 +165,8 @@ char *itob(char *s, int len, unsigned int num, short is_negative)
 char *itoASCII(char *s, int len, double num, short is_negative, char tag)
 {
 	s[len - 1] = '\0';
-	return (tag == 'b' ? itob(s, len, num, is_negative)
+	return (tag == 'b'   ? itob(s, len, num, is_negative)
+			: tag == 'o' ? itooc(s, len, num)
 			: itod(s, len, num, is_negative, tag));
 }
 

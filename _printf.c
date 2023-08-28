@@ -6,7 +6,7 @@
 
 #define IS_VALID_SPECIFIER(c)                                          \
 	((c) == '%' || (c) == 'c' || (c) == 's' || (c) == 'd' ||       \
-	 (c) == 'i' || (c) == 'b')
+	 (c) == 'i' || (c) == 'b' || (c) == 'u' || (c) == 'o')
 
 
 void set_specifier(const char *format, state_t *state);
@@ -105,7 +105,10 @@ void handle_specifier(const char *format, va_list args, state_t *state)
 				state->counter += _putchar(' ');
 			if (specifier == 'd' || specifier == 'i')
 				state->counter += handle_numbers(va_arg(args, int), 1);
-			else if (specifier == 'b' || specifier == 'u')
+			else if (
+					specifier == 'b' ||
+					specifier == 'u' ||
+					specifier == 'o')
 				state->counter += handle_numbers(va_arg(args, unsigned int), specifier);
 			else
 				state->counter += _putchar(specifier);
